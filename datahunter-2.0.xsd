@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:datahunter="http://www.baidu.com/datahunter"
+        elementFormDefault="qualified" targetNamespace="http://www.baidu.com/datahunter">
+
+    <!-- 时间滚动属性枚举-->
+    <simpleType name="timeRollingType">
+        <restriction base="NCName">
+            <enumeration value="DAY"/>
+            <enumeration value="HOUR"/>
+        </restriction>
+    </simpleType>
+    <!--自定义属性节点-->
+    <element name="properties">
+        <annotation>
+            <documentation>property customer defined</documentation>
+        </annotation>
+        <complexType>
+            <sequence>
+                <element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <simpleContent>
+                            <extension base="token">
+                                <attribute name="name" type="NCName" use="required"/>
+                                <attribute name="optional" type="boolean"/>
+                            </extension>
+                        </simpleContent>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+        <unique name="definePropertyUnique">
+            <selector xpath="datahunter:property"></selector>
+            <field xpath="@name"></field>
+        </unique>
+    </element>
+
+    <!--自定义属性节点-->
+    <element name="validator">
+        <annotation>
+            <documentation>file validator defined</documentation>
+        </annotation>
+        <complexType>
+            <sequence>
+                <element name="checkUrl" maxOccurs="1" minOccurs="0"/>
+                <element name="line" maxOccurs="1" minOccurs="0">
+                    <complexType>
+                        <attribute name="min" type="int"/>
+                        <attribute name="max" type="int"/>
+                    </complexType>
+                </element>
+                <element name="size" maxOccurs="1" minOccurs="0">
+                    <complexType>
+                        <attribute name="min" type="int"/>
+                        <attribute name="max" type="int"/>
+                    </complexType>
+                </element>
+            </sequence>
+            <attribute name="disable" type="boolean"/>
+        </complexType>
+    </element>
+
+    <!--global节点-->
+    <element name="global">
+        <complexType>
+            <sequence>
+                <element ref="datahunter:properties" maxOccurs="1" minOccurs="0"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <!--files节点-->
+    <element name="files">
+        <complexType>
+            <sequence>
+                <element name="file" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="url" type="token" maxOccurs="1" minOccurs="0"/>
+                            <element ref="datahunter:validator" maxOccurs="1" minOccurs="0"/>
+                            <element ref="datahunter:properties" maxOccurs="1" minOccurs="0"/>
+                        </sequence>
+                        <attribute name="name" type="token" use="required"/>
+                        <attribute name="email" type="token"/>
+                        <attribute name="phone" type="token"/>
+                        <attribute name="optional" type="boolean"/>
+                    </complexType>
+                    <unique name="filePropertyUnique">
+                        <selector xpath=".//datahunter:property"/>
+                        <field xpath="@name"/>
+                    </unique>
+                </element>
+            </sequence>
+        </complexType>
+        <unique name="fileNameUnique">
+            <selector xpath=".//datahunter:file"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+
+    <!-- datasources 节点-->
+    <element name="datasources">
+        <complexType>
+            <sequence>
+                <element name="datasource" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element ref="datahunter:properties" maxOccurs="1" minOccurs="0"/>
+                            <element ref="datahunter:files"/>
+                        </sequence>
+                        <attribute name="name" type="token" use="required"/>
+                        <attribute name="timeRolling" type="datahunter:timeRollingType"/>
+                        <attribute name="keepDays" type="token"/>
+                        <attribute name="timeout" type="token"/>
+                        <attribute name="email" type="token"/>
+                    </complexType>
+                </element>
+            </sequence>
+            <attribute name="workspace" type="token"/>
+            <attribute name="keepDays" type="token"/>
+            <attribute name="timeRolling" type="datahunter:timeRollingType"/>
+            <attribute name="timeout" type="token"/>
+        </complexType>
+        <unique name="dataSourceNameUnique">
+            <selector xpath="datahunter:datasource"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+    <!-- listeners 节点-->
+    <element name="listeners">
+        <complexType>
+            <sequence>
+                <element name="listener" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="arg" maxOccurs="unbounded" minOccurs="0">
+                                <complexType>
+                                    <simpleContent>
+                                        <extension base="string">
+                                            <attribute name="type" type="token"/>
+                                        </extension>
+                                    </simpleContent>
+                                </complexType>
+                            </element>
+                        </sequence>
+                        <attribute name="class" type="token" use="required"/>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+    <!-- 节点 -->
+    <element name="datahunter">
+        <complexType>
+            <sequence>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:global"/>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:datasources"/>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:listeners"/>
+            </sequence>
+        </complexType>
+    </element>
+</schema>

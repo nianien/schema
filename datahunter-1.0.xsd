@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:datahunter="http://www.nianien.com/datahunter"
+        elementFormDefault="qualified" targetNamespace="http://www.nianien.com/datahunter">
+
+    <!--全局属性枚举-->
+    <complexType name="globalPropertyType">
+        <annotation>
+            <documentation>property predefined for global</documentation>
+        </annotation>
+        <simpleContent>
+            <extension base="token">
+                <attribute name="name">
+                    <simpleType>
+                        <restriction base="NCName">
+                            <enumeration value="workspace"/>
+                            <enumeration value="datePattern"/>
+                            <enumeration value="keepDays"/>
+                            <enumeration value="timeout"/>
+                            <enumeration value="email"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </simpleContent>
+    </complexType>
+
+
+    <!--任务属性枚举-->
+    <complexType name="taskPropertyType">
+        <annotation>
+            <documentation>property predefined for task</documentation>
+        </annotation>
+        <simpleContent>
+            <extension base="token">
+                <attribute name="name">
+                    <simpleType>
+                        <restriction base="NCName">
+                            <enumeration value="datePattern"/>
+                            <enumeration value="keepDays"/>
+                            <enumeration value="timeout"/>
+                            <enumeration value="email"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <!--文件属性枚举-->
+    <complexType name="filePropertyType">
+        <annotation>
+            <documentation>property predefined for file</documentation>
+        </annotation>
+        <simpleContent>
+            <extension base="token">
+                <attribute name="name">
+                    <simpleType>
+                        <restriction base="NCName">
+                            <enumeration value="url"/>
+                            <enumeration value="checkUrl"/>
+                            <enumeration value="check"/>
+                            <enumeration value="timeout"/>
+                            <enumeration value="email"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <!--自定义属性节点-->
+    <element name="define">
+        <annotation>
+            <documentation>property custom defined</documentation>
+        </annotation>
+        <complexType>
+            <sequence>
+                <element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <simpleContent>
+                            <extension base="token">
+                                <attribute name="name" type="NCName">
+                                </attribute>
+                            </extension>
+                        </simpleContent>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+        <unique name="definePropertyUnique">
+            <selector xpath="datahunter:property"></selector>
+            <field xpath="@name"></field>
+        </unique>
+    </element>
+
+    <!--global节点-->
+    <element name="global">
+        <complexType>
+            <sequence>
+                <element name="properties">
+                    <complexType>
+                        <sequence>
+                            <element name="property" type="datahunter:globalPropertyType" maxOccurs="unbounded"
+                                     minOccurs="0"/>
+                            <element ref="datahunter:define" maxOccurs="1" minOccurs="0"/>
+                        </sequence>
+                    </complexType>
+                    <unique name="globalPropertyUnique">
+                        <selector xpath=".//datahunter:property"></selector>
+                        <field xpath="@name"></field>
+                    </unique>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+
+    <!--files节点-->
+    <element name="files">
+        <complexType>
+            <sequence>
+                <element name="file" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="property" type="datahunter:filePropertyType" maxOccurs="unbounded"
+                                     minOccurs="0"/>
+                            <element ref="datahunter:define" maxOccurs="1" minOccurs="0"/>
+                        </sequence>
+                        <attribute name="name" type="token" use="required"/>
+                    </complexType>
+                    <unique name="filePropertyUnique">
+                        <selector xpath=".//datahunter:property"/>
+                        <field xpath="@name"/>
+                    </unique>
+                </element>
+            </sequence>
+        </complexType>
+        <unique name="fileNameUnique">
+            <selector xpath=".//datahunter:file"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+
+    <!--tasks节点-->
+    <element name="tasks">
+        <complexType>
+            <sequence>
+                <element name="task" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="properties" minOccurs="0" maxOccurs="1">
+                                <complexType>
+                                    <sequence>
+                                        <element name="property" type="datahunter:taskPropertyType"
+                                                 maxOccurs="unbounded" minOccurs="0"/>
+                                        <element ref="datahunter:define" maxOccurs="1" minOccurs="0"/>
+                                    </sequence>
+                                </complexType>
+                                <unique name="taskPropertyUnique">
+                                    <selector xpath=".//datahunter:property"></selector>
+                                    <field xpath="@name"></field>
+                                </unique>
+                            </element>
+                            <element ref="datahunter:files"/>
+                        </sequence>
+                        <attribute name="name" type="token" use="required"/>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+        <unique name="taskIdUnique">
+            <selector xpath="datahunter:task"/>
+            <field xpath="@id"/>
+        </unique>
+        <unique name="taskNameUnique">
+            <selector xpath="datahunter:task"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+    <!--listeners节点-->
+    <element name="listeners">
+        <complexType>
+            <sequence>
+                <element name="listener" maxOccurs="unbounded" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="arg" maxOccurs="unbounded" minOccurs="0">
+                                <complexType>
+                                    <simpleContent>
+                                        <extension base="string">
+                                            <attribute name="type" type="token" use="optional"/>
+                                        </extension>
+                                    </simpleContent>
+                                </complexType>
+                            </element>
+                        </sequence>
+                        <attribute name="class" type="token" use="required"/>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+    <!-- 节点 -->
+    <element name="datahunter">
+        <complexType>
+            <sequence>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:global"/>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:tasks"/>
+                <element maxOccurs="1" minOccurs="0" ref="datahunter:listeners"/>
+            </sequence>
+        </complexType>
+    </element>
+</schema>
