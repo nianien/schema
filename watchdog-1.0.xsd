@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<schema xmlns:wd="http://www.scorpio.com/watchdog" xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://www.scorpio.com/watchdog" elementFormDefault="qualified">
+<schema xmlns:wd="http://www.nianien.com/watchdog" xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.nianien.com/watchdog" elementFormDefault="qualified">
 
     <simpleType name="data-type">
         <restriction base="NCName">
