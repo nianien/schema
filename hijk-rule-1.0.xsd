@@ -41,8 +41,6 @@
                 <element ref="hi:exclude" minOccurs="0" maxOccurs="unbounded"/>
                 <element ref="hi:if" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
-            <attribute name="name" type="token" use="required"/>
-            <attribute name="type" type="token" use="required"/>
         </complexType>
     </element>
     <element name="rule">
@@ -50,6 +48,8 @@
             <sequence>
                 <element ref="hi:data"/>
             </sequence>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="type" type="token" use="required"/>
         </complexType>
     </element>
     <element name="rules">
