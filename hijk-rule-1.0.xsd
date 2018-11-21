@@ -34,8 +34,7 @@
             <attribute name="test" type="token" use="required"/>
         </complexType>
     </element>
-
-    <element name="rule">
+    <element name="data">
         <complexType>
             <sequence>
                 <element ref="hi:include" minOccurs="0" maxOccurs="unbounded"/>
@@ -46,10 +45,17 @@
             <attribute name="type" type="token" use="required"/>
         </complexType>
     </element>
+    <element name="rule">
+        <complexType>
+            <sequence>
+                <element ref="hi:data"/>
+            </sequence>
+        </complexType>
+    </element>
     <element name="rules">
         <complexType>
             <sequence>
-                <element ref="hi:rule" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:data" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
     </element>
