@@ -55,7 +55,7 @@
     <element name="rules">
         <complexType>
             <sequence>
-                <element ref="hi:data" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:rule" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
     </element>
