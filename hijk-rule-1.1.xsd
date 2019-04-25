@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns:hi="http://www.nianien.com/rules" xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.nianien.com/rules" elementFormDefault="qualified">
+
+    <element name="include">
+        <complexType>
+            <simpleContent>
+                <extension base="token">
+                    <attribute name="path" type="token" use="required"/>
+                    <attribute name="test" type="token"/>
+                </extension>
+            </simpleContent>
+        </complexType>
+    </element>
+
+    <element name="exclude">
+        <complexType>
+            <simpleContent>
+                <extension base="token">
+                    <attribute name="path" type="token" use="required"/>
+                    <attribute name="test" type="token"/>
+                </extension>
+            </simpleContent>
+        </complexType>
+    </element>
+
+    <element name="if">
+        <complexType>
+            <sequence>
+                <element ref="hi:include" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:exclude" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:if" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="test" type="token" use="required"/>
+        </complexType>
+    </element>
+    <element name="replace">
+        <complexType>
+            <simpleContent>
+                <extension base="token">
+                    <attribute name="from" type="token" use="required"/>
+                    <attribute name="to" type="token" use="required"/>
+                    <attribute name="test" type="token"/>
+                </extension>
+            </simpleContent>
+        </complexType>
+    </element>
+    <element name="filter">
+        <complexType>
+            <sequence>
+                <element ref="hi:include" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:exclude" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:if" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="hi:replace" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="rule">
+        <complexType>
+            <sequence>
+                <element ref="hi:filter"/>
+            </sequence>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="type" type="token" use="required"/>
+        </complexType>
+    </element>
+    <element name="rules">
+        <complexType>
+            <sequence>
+                <element ref="hi:rule" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+</schema>
