@@ -126,7 +126,7 @@
         </unique>
     </element>
 
-    <element name="entities">
+    <element name="holmes">
         <complexType>
             <sequence>
                 <element name="entity" minOccurs="0" maxOccurs="unbounded">
