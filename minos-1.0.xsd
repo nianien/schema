@@ -50,7 +50,7 @@
             <sequence>
                 <element ref="minos:function" minOccurs="0" maxOccurs="unbounded"/>
                 <element ref="minos:datasource" minOccurs="0" maxOccurs="unbounded"/>
-                <element ref="minos:task" minOccurs="1" maxOccurs="unbounded"/>
+                <element ref="minos:task" minOccurs="0" maxOccurs="unbounded"/>
             </sequence>
         </complexType>
         <unique name="unique-function">
