@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns:minos="http://www.nianien.com/minos" xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.nianien.com/minos" elementFormDefault="qualified">
+
+    <simpleType name="data-type">
+        <restriction base="NCName">
+            <enumeration value="Boolean"/>
+            <enumeration value="Byte"/>
+            <enumeration value="Short"/>
+            <enumeration value="Integer"/>
+            <enumeration value="Long"/>
+            <enumeration value="Float"/>
+            <enumeration value="Double"/>
+            <enumeration value="Binary"/>
+            <enumeration value="String"/>
+            <enumeration value="Timestamp"/>
+            <enumeration value="DateTime"/>
+            <enumeration value="Date"/>
+            <enumeration value="Decimal"/>
+        </restriction>
+    </simpleType>
+
+    <element name="datasource">
+        <complexType>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="driver-class" type="token" use="required"/>
+            <attribute name="url" type="token" use="required"/>
+            <attribute name="user" type="token" use="optional"/>
+            <attribute name="password" type="token" use="optional"/>
+        </complexType>
+    </element>
+
+    <element name="function">
+        <complexType>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="class" type="token" use="required"/>
+        </complexType>
+    </element>
+    
+    <element name="column">
+        <complexType>
+            <simpleContent>
+                <extension base="token">
+                    <attribute name="name" type="NCName" use="required"/>
+                    <attribute name="type" type="minos:data-type" use="required"/>
+                </extension>
+            </simpleContent>
+        </complexType>
+    </element>
+
+    <element name="table">
+        <complexType>
+            <sequence>
+                <element ref="minos:column" maxOccurs="unbounded" minOccurs="1"/>
+            </sequence>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="datasource" type="token" use="required"/>
+            <attribute name="sql" type="token" use="required"/>
+            <attribute name="alias" type="token" use="optional"/>
+        </complexType>
+        <unique name="uq-column-name">
+            <selector xpath=".//minos:column"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+    <element name="view">
+        <complexType>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="sql" type="token" use="required"/>
+            <attribute name="alias" type="token" use="optional"/>
+        </complexType>
+    </element>
+
+    <!-- task -->
+    <element name="task">
+        <complexType>
+            <sequence>
+                <element ref="minos:table" maxOccurs="unbounded" minOccurs="1"/>
+                <element ref="minos:view" maxOccurs="unbounded" minOccurs="0"/>
+            </sequence>
+            <attribute name="name" type="token" use="required"/>
+            <attribute name="email" type="token" use="required"/>
+            <attribute name="desc" type="token" use="optional"/>
+            <attribute name="attach-show-limit" type="int" use="optional"/>
+        </complexType>
+        <unique name="unique-table">
+            <selector xpath="./minos:*"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+
+    <element name="minos">
+        <complexType>
+            <sequence>
+                <element ref="minos:function" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="minos:datasource" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="minos:task" minOccurs="1" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+        <unique name="unique-datasource">
+            <selector xpath="minos:datasource"/>
+            <field xpath="@name"/>
+        </unique>
+        <unique name="unique-task">
+            <selector xpath="minos:task"/>
+            <field xpath="@name"/>
+        </unique>
+    </element>
+</schema>
