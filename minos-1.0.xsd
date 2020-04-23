@@ -22,9 +22,11 @@
     <element name="table">
         <complexType>
             <attribute name="name" type="token" use="required"/>
-            <attribute name="datasource" type="token" use="required"/>
             <attribute name="sql" type="token" use="required"/>
-            <attribute name="alias" type="token" use="optional"/>
+            <attribute name="datasource" type="token" use="optional"/>
+            <attribute name="title" type="token" use="optional"/>
+            <attribute name="labels" type="token" use="optional"/>
+
         </complexType>
     </element>
 
@@ -37,11 +39,15 @@
             <attribute name="name" type="token" use="required"/>
             <attribute name="email" type="token" use="required"/>
             <attribute name="desc" type="token" use="optional"/>
-            <attribute name="attach-show-limit" type="int" use="optional"/>
+            <attribute name="show-limit" type="int" use="optional"/>
         </complexType>
-        <unique name="unique-table">
+        <unique name="unique-table-name">
             <selector xpath="./minos:*"/>
             <field xpath="@name"/>
+        </unique>
+        <unique name="unique-table-title">
+            <selector xpath="./minos:*"/>
+            <field xpath="@title"/>
         </unique>
     </element>
 
